@@ -1,0 +1,62 @@
+﻿@page
+@model BenefitsCalc.Pages.AppConfigs.IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+@if (Model.AppConfig.Count == 0) {
+	<p>
+		<a asp-page="Create">Add Config</a>
+	</p>
+}
+
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.AppConfig[0].DefaultSalary)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AppConfig[0].PayPeriods)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AppConfig[0].BaseBenefitsCost)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AppConfig[0].DependentCost)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AppConfig[0].DiscountPct)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.AppConfig) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.DefaultSalary)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.PayPeriods)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.BaseBenefitsCost)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DependentCost)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DiscountPct)
+				</td>
+				<td>
+					<a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.ID">Details</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

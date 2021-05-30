@@ -1,0 +1,67 @@
+﻿@page
+@model BenefitsCalc.Pages.Employees.IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].FName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].LName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].GrossPay)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].NetPay)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].BenefitsCost)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Employee[0].isBenefitsDiscount)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Employee) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.FName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.LName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.GrossPay)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NetPay)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.BenefitsCost)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.isBenefitsDiscount)
+				</td>
+				<td>
+					<a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@item.ID">Delete</a> |
+					<a asp-page="../Dependents/Index" asp-route-EmployeeID="@item.ID">Dependents</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,52 @@
+﻿@page
+@model BenefitsCalc.Pages.Dependents.IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index@(Model.EmployeeID != null && Model.EmployeeID.Length > 0 ? " for Employee " + Model.EmployeeID : "")</h1>
+
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Dependent[0].EmployeeID)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Dependent[0].FName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Dependent[0].LName)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Dependent) {
+			var d = new Dictionary<string, string> { { "ID", item.ID.ToString() } };
+			if(Model.EmployeeID != null && Model.EmployeeID.Length > 0) {
+				d["EmployeeID"] = Model.EmployeeID;
+			}
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.EmployeeID)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.LName)
+				</td>
+				<td>
+					<a asp-page="./Edit" asp-all-route-data="d">Edit</a> |
+					<a asp-page="./Details" asp-all-route-data="d">Details</a> |
+					<a asp-page="./Delete" asp-all-route-data="d">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

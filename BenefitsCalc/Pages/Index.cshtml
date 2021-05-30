@@ -1,0 +1,180 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Home page";
+}
+<script type="text/javascript">
+	function filterDependents(el, iEmpID) {
+		//clear prev employee selection and highlight selection
+		$('.emprow').removeClass('selected');
+		$(el).addClass('selected');
+
+		//Dynamically filter via GET with json return for result table generation
+		$.ajax({
+			url: '/DependentFilter',
+			data: { iEmpID: iEmpID }
+		})
+			.done(function (result) {
+				$('#DependentTableDiv').removeClass('hidden');
+
+				var table = $('#DependentTableBody');
+				table.empty();
+				$.each(result, function (index, fields) {
+					var row = $('<tr>');
+					$.each(fields, function (k, v) {
+						if (k != 'id' && k.toLowerCase() != 'employeeid') {
+							var cell = $('<td>').text(v);
+							row.append(cell);
+						}
+					})
+					var actions = $('<td>');
+
+					actions.append($('<a>').attr('href', '/Dependents/Edit?id=' + fields['id']).text('Edit'));
+					actions.append(' | ');
+					actions.append($('<a>').attr('href', '/Dependents/Delete?id=' + fields['id']).text('Delete'));
+					row.append(actions);
+
+					table.append(row);
+				})
+				table.append($('<tr>').append($('<td>').attr('colspan', '3').append($('<a>').attr('href', './Dependents/Create?EmployeeID=' + iEmpID).text('Add Dependent'))));
+			});
+
+		$.ajax({
+			url: '/DetailedPaymentInfo',
+			data: { iEmpID: iEmpID }
+		})
+			.done(function (result) {
+				var table = $('#DetailTableBody');
+				table.empty();
+				$.each(result, function (k, v) {
+					var row = $('<tr>');
+					row.append($('<td>').text(k));
+					row.append($('<td>').text(v));
+					table.append(row);
+				})
+			});
+	};
+</script>
+
+<div class="row">
+	<div class="text-center col-12">
+		<h1 class="display-4">Benefits Calculator</h1>
+		<span>Select or Create New Employee to calculate benefits.</span>
+	</div>
+</div>
+<div class="row">
+	<div class="col-9">
+		<div id="EmployeeTableDiv">
+			<h2>Employees</h2>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].FName)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].LName)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].GrossPay)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].NetPay)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].BenefitsCost)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Employee[0].isBenefitsDiscount)
+						</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="EmployeeTableBody">
+					@foreach (var item in Model.Employee) {
+						<tr onclick="filterDependents(this,@item.ID)" class="emprow">
+							<td>
+								@Html.DisplayFor(modelItem => item.FName)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.LName)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.GrossPay)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.NetPay)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.BenefitsCost)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.isBenefitsDiscount)
+							</td>
+							<td>
+								<a asp-page="./Employees/Edit" asp-route-id="@item.ID">Edit</a> |
+								<a asp-page="./Employees/Details" asp-route-id="@item.ID">Details</a> |
+								<a asp-page="./Employees/Delete" asp-route-id="@item.ID">Delete</a>
+							</td>
+						</tr>
+					}
+					<tr>
+						<td colspan="7">
+							<a asp-page="./Employees/Create">Add Employee</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="DependentTableDiv" class="hidden">
+			<h2>Dependents</h2>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							@Html.DisplayNameFor(model => model.Dependent[0].FName)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.Dependent[0].LName)
+						</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="DependentTableBody">
+					@foreach (var item in Model.Dependent) {
+						<tr>
+							<td>
+								@Html.DisplayFor(modelItem => item.FName)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.LName)
+							</td>
+							<td>
+								<a asp-page="./Dependents/Edit" asp-route-id="@item.ID">Edit</a> |
+								<a asp-page="./Dependents/Delete" asp-route-id="@item.ID">Delete</a>
+							</td>
+						</tr>
+					}
+					<tr>
+						<td colspan="2">
+							<a asp-page="./Dependents/Create">Add Dependent</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="text-center">
+			<h4>Detailed Info</h4>
+		</div>
+		<hr />
+		<table>
+			<tbody id="DetailTableBody">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
